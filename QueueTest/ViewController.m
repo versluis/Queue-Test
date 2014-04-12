@@ -10,6 +10,9 @@
 
 @interface ViewController ()
 
+- (IBAction)mainQueue:(id)sender;
+- (IBAction)backgroundQueue:(id)sender;
+
 @end
 
 @implementation ViewController
@@ -25,5 +28,31 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+- (IBAction)mainQueue:(id)sender {
+    
+    // call this on the main thread
+    [NSThread sleepForTimeInterval:3];
+    int i = arc4random() % 100;
+    self.title = [[NSString alloc]initWithFormat:@"Result: %d", i];
+    
+}
+
+- (IBAction)backgroundQueue:(id)sender {
+    
+    // call the same method on a background thread
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        [NSThread sleepForTimeInterval:3];
+        int i = arc4random() % 100;
+        
+        // update UI on the main thread
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.title = [[NSString alloc]initWithFormat:@"Result: %d", i];
+        });
+
+    });
+}
+
 
 @end
