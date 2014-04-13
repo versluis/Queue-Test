@@ -1,4 +1,4 @@
-Queue-Test
+Queue Test
 ==========
 
 iOS Project demonstrating how to use background threads.
